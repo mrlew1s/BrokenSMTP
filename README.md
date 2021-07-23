@@ -1,7 +1,7 @@
 # BrokenSMTP
 BrokenSMTP is a python3 BugBounty/Pentesting tool to look for common vulnerabilities on SMTP server.
 
-![image](https://i.ibb.co/nPZhGyM/brokensmtp.png)
+![image](brokensmtp.png)
 
 Supported Vulnerability : 
 * Spoofing - The ability to send an email by impersonating another user.
