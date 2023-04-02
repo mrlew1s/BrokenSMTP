@@ -4,6 +4,8 @@ BrokenSMTP is a python3 BugBounty/Pentesting tool to look for common vulnerabili
 ![image](brokensmtp.png)
 
 Supported Vulnerability : 
+* Feature Enumeration - Enumerate available features ob the SMTP Server.
+
 * Spoofing - The ability to send an email by impersonating another user.
 * User Enumeration - Looking for the possibility to enumerate users with SMTP VFRY command.
 </br>

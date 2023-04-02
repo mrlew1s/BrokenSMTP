@@ -35,7 +35,7 @@ def spoof(target,ports):
         except ConnectionRefusedError:
             print("{}   Connection refused by host {}. It don't seem to be vunlerable to mail spoofing on port {} \033[0;37m \n".format(BLUE,target,port))
         except Exception:
-            print("{}   Exception Occured on host {}. It don't seem to be vunlerable to mail spoofing on port {} \033[0;37m \n".format(BLUE,target,port))
+            print("{}   Exception Occured on host {} on port {}. A bug have occured. You may need to debg the script. \033[0;37m \n".format(BLUE,target,port))
         except KeyboardInterrupt:
             print("    [CTRL+C] Stopping...")
             exit()
@@ -66,17 +66,47 @@ def userenum (target,ports):
             # 504 Command parameter not implemented
             # 421 <domain> Service not available, closing transmission channel
             # 550 Requested action not taken: mailbox unavailable
-            verify = SMTP(target, port).verify("")
+
+            #change user if needed. 
+            verify = SMTP(target, port).verify("root")
+            #print(verify)
             if verify[0] in [250, 252]:
                 print("{}  The SMTP Server Targeted : {} is potentialy vulnerable to user enumeration on port {}. VRFY query responded status : {}  \033[0;37m \n".format(GREEN,target,port,verify[0]))
             else:
                 print("{}  The SMTP Server Targeted : {} don't seem to be vulberable to user enumeration on port {}. VRFY query responded statys : {}  \033[0;37m \n".format(BLUE,target,port,verify[0]))
         except Exception:
-            print("{}   Exception Occured on host {}. It don't seem to be vunlerable to user enumeration on port {}. \033[0;37m \n".format(BLUE,target,port))
+            print("{}   Exception Occured on host {} on port {}. A bug have occured. You may need to debg the script. \033[0;37m \n".format(BLUE,target,port))
         except KeyboardInterrupt:
             print("    [CTRL+C] Stopping...")
             exit()
-        
+def featureEnum (target,ports): 
+    TestedPorts = []
+    if (ports=="*"):
+        TestedPorts = ['25','465','587','2525']
+        ports = "25, 465, 587 and 2525"
+    else:
+        TestedPorts = list(ports.split(","))
+    
+    print("{}[!] Enumerating SMTP enabled features on port {}..... [!]\n\033[94m".format(WHITE,ports))
+    
+    for port in TestedPorts: 
+        print("{}  Looking for SMTP enabled features on port {}.....\n\033[94m".format(WHITE,port))
+        try:
+            helloall = SMTP(target,port).ehlo("all")
+            if helloall[0] in [250, 252]:
+                print("{}  The SMTP Server Targeted : {} on port {} has some available features... potentialy vulnerable...  \033[0;37m".format(GREEN,target,port))
+                commands = helloall[1].split(b'\n')
+                #print(commands)
+                for command in commands:
+                    print("{}  {}   \033[0;37m".format(GREEN,command.decode('utf-8')))
+                print("\n")        
+            else:
+                print("{}  The SMTP Server Targeted : {} don't seem to have available features... see the status response : {}  \033[0;37m \n".format(BLUE,target,port,helloall[0]))
+        except Exception:
+           print("{}   Exception Occured on host {} on port {}. A bug have occured. You may need to debg the script. \033[0;37m \n".format(BLUE,target,port))
+        except KeyboardInterrupt:
+            print("    [CTRL+C] Stopping...")
+            exit()        
     
     
 if __name__ == "__main__": 
@@ -99,6 +129,6 @@ if __name__ == "__main__":
     
     target = args.targets
     port = args.port
-
+    featureEnum(target,port)
     spoof(target,port)
     userenum(target,port)
