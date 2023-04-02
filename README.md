@@ -1,7 +1,7 @@
 # BrokenSMTP
 BrokenSMTP is a python3 BugBounty/Pentesting tool to look for common vulnerabilities on SMTP server.
 
-![image](broken_smtp.png)
+![image](broken_smtp.PNG)
 
 Supported Vulnerability : 
 * Feature Enumeration - Enumerate available features on the SMTP Server.
